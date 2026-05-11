@@ -1,0 +1,7 @@
+{
+  "name": "@mirasly/i18n",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "src/index.js",
+  "types": "src/index.ts"
+}

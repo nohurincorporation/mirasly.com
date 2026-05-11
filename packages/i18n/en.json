@@ -1,0 +1,141 @@
+{
+  "nav": {
+    "home": "Home",
+    "favorites": "Favorites",
+    "add": "Add",
+    "chats": "Chats",
+    "profile": "Profile",
+    "categories": "Categories",
+    "places": "Places",
+    "stories": "Stories",
+    "shops": "Shops",
+    "business360": "Business 360",
+    "help": "Help",
+    "terms": "Rules"
+  },
+  "auth": {
+    "login": "Log in",
+    "phone": "Phone number",
+    "otp": "Verification code",
+    "sendOtp": "Send code",
+    "verifyOtp": "Verify code",
+    "logout": "Log out",
+    "deleteAccount": "Delete account"
+  },
+  "search": {
+    "placeholder": "Search Mirasly",
+    "voice": "Voice search",
+    "image": "Image search",
+    "recent": "Recent searches",
+    "trending": "Trending searches",
+    "save": "Save search",
+    "empty": "No results found"
+  },
+  "categories": {
+    "all": "All categories",
+    "featured": "Featured categories",
+    "filters": "Filters",
+    "seoTitle": "Mirasly categories"
+  },
+  "filters": {
+    "price": "Price",
+    "currency": "Currency",
+    "city": "City",
+    "district": "District",
+    "condition": "Condition",
+    "sellerType": "Seller type",
+    "verifiedOnly": "Verified only"
+  },
+  "listing": {
+    "title": "Title",
+    "description": "Description",
+    "price": "Price",
+    "location": "Location",
+    "media": "Photos and video",
+    "contact": "Contact",
+    "preview": "Preview",
+    "submit": "Submit for review",
+    "safety": "Safety warning"
+  },
+  "buttons": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "continue": "Continue",
+    "publish": "Publish",
+    "chat": "Chat",
+    "call": "Call",
+    "report": "Report",
+    "share": "Share"
+  },
+  "errors": {
+    "required": "This field is required",
+    "network": "Network error",
+    "unauthorized": "Login required",
+    "forbidden": "Access denied",
+    "invalidOtp": "Invalid code"
+  },
+  "empty": {
+    "favorites": "No favorites yet",
+    "chats": "No chats yet",
+    "orders": "No orders",
+    "listings": "No listings found"
+  },
+  "notifications": {
+    "message": "New message",
+    "priceDrop": "Price dropped",
+    "savedSearch": "New saved search match",
+    "approved": "Listing approved",
+    "rejected": "Listing rejected",
+    "security": "Security alert"
+  },
+  "admin": {
+    "dashboard": "Dashboard",
+    "users": "Users",
+    "listings": "Moderation",
+    "translations": "Translations",
+    "auditLogs": "Audit logs",
+    "approve": "Approve",
+    "reject": "Reject",
+    "needsReview": "Needs review"
+  },
+  "promotions": {
+    "boost": "Boost",
+    "highlight": "Highlight",
+    "vip": "VIP listing",
+    "story": "Story promotion",
+    "analytics": "Promotion analytics"
+  },
+  "seller": {
+    "dashboard": "Seller dashboard",
+    "myListings": "My listings",
+    "myShops": "My shops",
+    "analytics": "Analytics",
+    "bulkUpload": "Bulk upload"
+  },
+  "chat": {
+    "input": "Write a message",
+    "send": "Send",
+    "attachListing": "Attach listing",
+    "shareLocation": "Share location",
+    "blocked": "User blocked"
+  },
+  "orders": {
+    "cart": "Cart",
+    "checkout": "Checkout",
+    "pending": "Pending",
+    "delivered": "Delivered",
+    "cancelled": "Cancelled"
+  },
+  "reviews": {
+    "rating": "Rating",
+    "write": "Write review",
+    "photos": "Review photos",
+    "report": "Report review"
+  },
+  "safety": {
+    "meetPublic": "Meet in a public place",
+    "noPrepay": "Do not prepay without trust",
+    "pharmacy": "Pharmacy goods must follow legal rules",
+    "reportSuspicious": "Report suspicious activity"
+  }
+}

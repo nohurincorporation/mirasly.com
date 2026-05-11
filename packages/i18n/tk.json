@@ -1,0 +1,141 @@
+{
+  "nav": {
+    "home": "Baş sahypa",
+    "favorites": "Halanlarym",
+    "add": "Goş",
+    "chats": "Hatlar",
+    "profile": "Profil",
+    "categories": "Bölümler",
+    "places": "Ýerler",
+    "stories": "Hekaýalar",
+    "shops": "Dükanlar",
+    "business360": "Biznes 360",
+    "help": "Kömek",
+    "terms": "Düzgünler"
+  },
+  "auth": {
+    "login": "Girmek",
+    "phone": "Telefon belgisi",
+    "otp": "Tassyklama kody",
+    "sendOtp": "Kod iber",
+    "verifyOtp": "Kody tassykla",
+    "logout": "Çykmak",
+    "deleteAccount": "Hasaby pozmak"
+  },
+  "search": {
+    "placeholder": "Mirasly-da gözläň",
+    "voice": "Ses bilen gözle",
+    "image": "Surat bilen gözle",
+    "recent": "Soňky gözlegler",
+    "trending": "Meşhur gözlegler",
+    "save": "Gözlegi sakla",
+    "empty": "Netije tapylmady"
+  },
+  "categories": {
+    "all": "Ähli bölümler",
+    "featured": "Saýlanan bölümler",
+    "filters": "Süzgüçler",
+    "seoTitle": "Mirasly bölümleri"
+  },
+  "filters": {
+    "price": "Bahasy",
+    "currency": "Pul birligi",
+    "city": "Şäher",
+    "district": "Etrap",
+    "condition": "Ýagdaýy",
+    "sellerType": "Satyjy görnüşi",
+    "verifiedOnly": "Diňe tassyklananlar"
+  },
+  "listing": {
+    "title": "Atlandyryş",
+    "description": "Düşündiriş",
+    "price": "Bahasy",
+    "location": "Ýerleşýän ýeri",
+    "media": "Suratlar we wideo",
+    "contact": "Habarlaşmak",
+    "preview": "Syn",
+    "submit": "Barlaga iber",
+    "safety": "Howpsuzlyk duýduryşy"
+  },
+  "buttons": {
+    "save": "Sakla",
+    "cancel": "Bes et",
+    "continue": "Dowam et",
+    "publish": "Çap et",
+    "chat": "Hat ýaz",
+    "call": "Jaň et",
+    "report": "Şikaýat et",
+    "share": "Paýlaş"
+  },
+  "errors": {
+    "required": "Bu meýdan hökmany",
+    "network": "Tor näsazlygy",
+    "unauthorized": "Giriş gerek",
+    "forbidden": "Rugsat ýok",
+    "invalidOtp": "Kod nädogry"
+  },
+  "empty": {
+    "favorites": "Häzirlikçe halanan bildiriş ýok",
+    "chats": "Hatlar ýok",
+    "orders": "Sargyt ýok",
+    "listings": "Bildiriş tapylmady"
+  },
+  "notifications": {
+    "message": "Täze hat",
+    "priceDrop": "Baha peseldi",
+    "savedSearch": "Täze gabat gelen bildiriş",
+    "approved": "Bildiriş tassyklandy",
+    "rejected": "Bildiriş ret edildi",
+    "security": "Howpsuzlyk habary"
+  },
+  "admin": {
+    "dashboard": "Dolandyryş paneli",
+    "users": "Ulanyjylar",
+    "listings": "Moderasiýa",
+    "translations": "Terjimeler",
+    "auditLogs": "Audit ýazgylary",
+    "approve": "Tassykla",
+    "reject": "Ret et",
+    "needsReview": "Gözden geçirmeli"
+  },
+  "promotions": {
+    "boost": "Ýokary galdyr",
+    "highlight": "Tapawutlandyr",
+    "vip": "VIP bildiriş",
+    "story": "Hekaýa mahabaty",
+    "analytics": "Mahabat statistikasy"
+  },
+  "seller": {
+    "dashboard": "Satyjy paneli",
+    "myListings": "Bildirişlerim",
+    "myShops": "Dükanlarym",
+    "analytics": "Statistika",
+    "bulkUpload": "Köpçülikleýin ýükle"
+  },
+  "chat": {
+    "input": "Hatyňyzy ýazyň",
+    "send": "Iber",
+    "attachListing": "Bildiriş goş",
+    "shareLocation": "Ýer paýlaş",
+    "blocked": "Ulanyjy bloklandy"
+  },
+  "orders": {
+    "cart": "Sebet",
+    "checkout": "Sargyt etmek",
+    "pending": "Garaşylýar",
+    "delivered": "Eltildi",
+    "cancelled": "Ýatyryldy"
+  },
+  "reviews": {
+    "rating": "Baha",
+    "write": "Syn ýaz",
+    "photos": "Syn suratlary",
+    "report": "Syn barada habar ber"
+  },
+  "safety": {
+    "meetPublic": "Jemgyýetçilik ýerinde duşuşyň",
+    "noPrepay": "Ynamsyz öňünden töleg geçirmäň",
+    "pharmacy": "Dermanhana harytlary kanunlara laýyk bolmaly",
+    "reportSuspicious": "Şübheli ýagdaýy habar beriň"
+  }
+}

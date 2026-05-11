@@ -1,0 +1,10 @@
+{
+  "name": "@mirasly/db",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "src/seed-data.js",
+  "types": "src/index.ts",
+  "scripts": {
+    "seed": "node src/seed-data.js"
+  }
+}

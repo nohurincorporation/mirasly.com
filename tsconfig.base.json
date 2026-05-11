@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@mirasly/contracts": ["packages/contracts/src/index.ts"],
+      "@mirasly/i18n": ["packages/i18n/src/index.ts"],
+      "@mirasly/db": ["packages/db/src/index.ts"],
+      "@mirasly/ui": ["packages/ui/src/index.ts"],
+      "@mirasly/config": ["packages/config/src/index.ts"]
+    }
+  }
+}

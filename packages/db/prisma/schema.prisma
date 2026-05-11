@@ -1,0 +1,611 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String           @id @default(uuid())
+  phone           String?          @unique
+  email           String?          @unique
+  status          String           @default("active")
+  preferredLocale String           @default("tk")
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  profile         UserProfile?
+  sessions        UserSession[]
+  roles           UserRole[]
+  listings        Listing[]
+  shops           Shop[]
+  places          Place[]
+  favorites       Favorite[]
+  savedSearches   SavedSearch[]
+  notifications   Notification[]
+  reports         Report[]
+  walletAccounts  WalletAccount[]
+  supportTickets  SupportTicket[]
+}
+
+model UserProfile {
+  userId                  String  @id
+  displayName             String
+  avatarObjectKey         String?
+  city                    String?
+  notificationPreferences Json    @default("{}")
+  privacySettings         Json    @default("{}")
+  savedAddresses          Json    @default("[]")
+  user                    User    @relation(fields: [userId], references: [id])
+}
+
+model UserSession {
+  id           String   @id @default(uuid())
+  userId       String
+  deviceName   String?
+  refreshHash  String
+  ipAddress    String?
+  userAgent    String?
+  revokedAt    DateTime?
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+  user         User     @relation(fields: [userId], references: [id])
+
+  @@index([userId, revokedAt])
+}
+
+model Role {
+  id          String       @id @default(uuid())
+  code        String       @unique
+  name        String
+  permissions Permission[]
+  users       UserRole[]
+}
+
+model Permission {
+  id     String @id @default(uuid())
+  code   String @unique
+  roles  Role[]
+}
+
+model UserRole {
+  userId String
+  roleId String
+  user   User @relation(fields: [userId], references: [id])
+  role   Role @relation(fields: [roleId], references: [id])
+
+  @@id([userId, roleId])
+}
+
+model Category {
+  id            String                @id @default(uuid())
+  parentId      String?
+  code          String                @unique
+  icon          String
+  imageObjectKey String?
+  order         Int
+  featured      Boolean               @default(false)
+  rules         Json                  @default("{}")
+  parent        Category?             @relation("CategoryTree", fields: [parentId], references: [id])
+  children      Category[]            @relation("CategoryTree")
+  translations  CategoryTranslation[]
+  filters       CategoryFilter[]
+  listings      Listing[]
+
+  @@index([parentId, order])
+}
+
+model CategoryTranslation {
+  id             String   @id @default(uuid())
+  categoryId     String
+  locale         String
+  name           String
+  slug           String
+  seoTitle       String
+  seoDescription String
+  category       Category @relation(fields: [categoryId], references: [id])
+
+  @@unique([locale, slug])
+  @@unique([categoryId, locale])
+}
+
+model CategoryFilter {
+  id         String                 @id @default(uuid())
+  categoryId String
+  code       String
+  type       String
+  required   Boolean                @default(false)
+  options    CategoryFilterOption[]
+  category   Category               @relation(fields: [categoryId], references: [id])
+
+  @@unique([categoryId, code])
+}
+
+model CategoryFilterOption {
+  id       String @id @default(uuid())
+  filterId String
+  code     String
+  label    Json
+  filter   CategoryFilter @relation(fields: [filterId], references: [id])
+
+  @@unique([filterId, code])
+}
+
+model Listing {
+  id                String               @id @default(uuid())
+  sellerId          String
+  categoryId        String
+  type              String
+  status            String               @default("draft")
+  price             Decimal?
+  currency          String?
+  city              String
+  district          String?
+  addressPrivate    Boolean              @default(true)
+  location          Unsupported("geography(Point, 4326)")?
+  attributes        Json                 @default("{}")
+  trustScore        Decimal              @default(0)
+  promotedRank      Int                  @default(0)
+  searchDocumentId  String?
+  createdAt         DateTime             @default(now())
+  updatedAt         DateTime             @updatedAt
+  seller            User                 @relation(fields: [sellerId], references: [id])
+  category          Category             @relation(fields: [categoryId], references: [id])
+  translations      ListingTranslation[]
+  media             ListingMedia[]
+  listingAttributes ListingAttribute[]
+  promotions        ListingPromotion[]
+  views             ListingView[]
+  favorites         Favorite[]
+  reports           Report[]
+
+  @@index([status, categoryId, city, createdAt])
+  @@index([sellerId, status])
+  @@index([promotedRank, createdAt])
+  @@index([searchDocumentId])
+}
+
+model ListingAttribute {
+  id        String  @id @default(uuid())
+  listingId String
+  code      String
+  value     Json
+  listing   Listing @relation(fields: [listingId], references: [id])
+
+  @@unique([listingId, code])
+}
+
+model ListingTranslation {
+  id          String  @id @default(uuid())
+  listingId   String
+  locale      String
+  title       String
+  description String
+  listing     Listing @relation(fields: [listingId], references: [id])
+
+  @@unique([listingId, locale])
+}
+
+model ListingMedia {
+  id        String  @id @default(uuid())
+  listingId String
+  type      String
+  objectKey String
+  order     Int
+  metadata  Json    @default("{}")
+  listing   Listing @relation(fields: [listingId], references: [id])
+
+  @@index([listingId, order])
+}
+
+model ListingPromotion {
+  id        String   @id @default(uuid())
+  listingId String
+  type      String
+  startsAt  DateTime
+  endsAt    DateTime
+  analytics Json     @default("{}")
+  listing   Listing  @relation(fields: [listingId], references: [id])
+}
+
+model ListingView {
+  id        String   @id @default(uuid())
+  listingId String
+  userId    String?
+  ipHash    String?
+  createdAt DateTime @default(now())
+  listing   Listing  @relation(fields: [listingId], references: [id])
+
+  @@index([listingId, createdAt])
+}
+
+model Favorite {
+  id        String   @id @default(uuid())
+  userId    String
+  listingId String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  listing   Listing  @relation(fields: [listingId], references: [id])
+
+  @@unique([userId, listingId])
+}
+
+model FavoriteCollection {
+  id        String   @id @default(uuid())
+  userId    String
+  name      String
+  listingIds Json    @default("[]")
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+}
+
+model SavedSearch {
+  id        String   @id @default(uuid())
+  userId    String
+  name      String
+  query     String?
+  filters   Json     @default("{}")
+  cadence   String   @default("instant")
+  pausedAt  DateTime?
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Shop {
+  id           String   @id @default(uuid())
+  ownerId      String
+  status       String   @default("pending")
+  city         String
+  location     Unsupported("geography(Point, 4326)")?
+  verification Json     @default("{}")
+  owner        User     @relation(fields: [ownerId], references: [id])
+  translations ShopTranslation[]
+  followers    ShopFollower[]
+  staff        ShopStaff[]
+  products     ShopProduct[]
+}
+
+model ShopTranslation {
+  id          String @id @default(uuid())
+  shopId      String
+  locale      String
+  name        String
+  description String
+  shop        Shop   @relation(fields: [shopId], references: [id])
+
+  @@unique([shopId, locale])
+}
+
+model ShopFollower {
+  shopId    String
+  userId    String
+  createdAt DateTime @default(now())
+  shop      Shop     @relation(fields: [shopId], references: [id])
+
+  @@id([shopId, userId])
+}
+
+model ShopStaff {
+  shopId      String
+  userId      String
+  role        String
+  permissions Json   @default("[]")
+  shop        Shop   @relation(fields: [shopId], references: [id])
+
+  @@id([shopId, userId])
+}
+
+model ShopProduct {
+  id          String   @id @default(uuid())
+  shopId      String
+  listingId   String?
+  sku         String?
+  inventory   Int      @default(0)
+  price       Decimal
+  currency    String   @default("TMT")
+  status      String   @default("active")
+  shop        Shop     @relation(fields: [shopId], references: [id])
+
+  @@index([shopId, status])
+}
+
+model Place {
+  id        String   @id @default(uuid())
+  ownerId   String?
+  status    String   @default("pending")
+  category  String
+  city      String
+  location  Unsupported("geography(Point, 4326)")?
+  owner     User?    @relation(fields: [ownerId], references: [id])
+  translations PlaceTranslation[]
+  reviews      PlaceReview[]
+}
+
+model PlaceTranslation {
+  id          String @id @default(uuid())
+  placeId     String
+  locale      String
+  name        String
+  description String
+  place       Place  @relation(fields: [placeId], references: [id])
+
+  @@unique([placeId, locale])
+}
+
+model PlaceReview {
+  id        String        @id @default(uuid())
+  placeId   String
+  userId    String
+  rating    Int
+  text      String?
+  status    String        @default("pending")
+  createdAt DateTime      @default(now())
+  place     Place         @relation(fields: [placeId], references: [id])
+  media     ReviewMedia[]
+
+  @@index([placeId, status, createdAt])
+}
+
+model ReviewMedia {
+  id        String      @id @default(uuid())
+  reviewId  String
+  objectKey String
+  review    PlaceReview @relation(fields: [reviewId], references: [id])
+}
+
+model Chat {
+  id           String            @id @default(uuid())
+  listingId    String?
+  status       String            @default("active")
+  createdAt    DateTime          @default(now())
+  participants ChatParticipant[]
+  messages     ChatMessage[]
+}
+
+model ChatParticipant {
+  chatId     String
+  userId     String
+  archivedAt DateTime?
+  blockedAt  DateTime?
+  chat       Chat      @relation(fields: [chatId], references: [id])
+
+  @@id([chatId, userId])
+}
+
+model ChatMessage {
+  id        String   @id @default(uuid())
+  chatId    String
+  senderId  String
+  type      String
+  body      Json
+  readAt    DateTime?
+  createdAt DateTime @default(now())
+  chat      Chat     @relation(fields: [chatId], references: [id])
+
+  @@index([chatId, createdAt])
+}
+
+model Story {
+  id          String      @id @default(uuid())
+  ownerId     String
+  listingId   String?
+  shopId      String?
+  status      String      @default("pending")
+  mediaObjectKey String
+  metadata    Json        @default("{}")
+  expiresAt   DateTime
+  createdAt   DateTime    @default(now())
+  views       StoryView[]
+
+  @@index([status, expiresAt])
+}
+
+model StoryView {
+  storyId   String
+  userId    String
+  clickedAt DateTime?
+  viewedAt  DateTime @default(now())
+  story     Story    @relation(fields: [storyId], references: [id])
+
+  @@id([storyId, userId])
+}
+
+model Promotion {
+  id          String   @id @default(uuid())
+  code        String   @unique
+  scope       String
+  price       Decimal
+  currency    String   @default("TMT")
+  durationHours Int
+  metadata    Json     @default("{}")
+}
+
+model Order {
+  id          String      @id @default(uuid())
+  buyerId     String
+  sellerId    String
+  status      String      @default("draft")
+  total       Decimal     @default(0)
+  currency    String      @default("TMT")
+  delivery    Json        @default("{}")
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  items       OrderItem[]
+
+  @@index([buyerId, status, createdAt])
+  @@index([sellerId, status, createdAt])
+}
+
+model OrderItem {
+  id        String  @id @default(uuid())
+  orderId   String
+  productId String?
+  listingId String?
+  quantity  Int
+  price     Decimal
+  order     Order   @relation(fields: [orderId], references: [id])
+}
+
+model CartItem {
+  id        String   @id @default(uuid())
+  userId    String
+  shopId    String
+  productId String
+  quantity  Int
+  createdAt DateTime @default(now())
+
+  @@unique([userId, productId])
+}
+
+model Payment {
+  id          String   @id @default(uuid())
+  orderId     String?
+  provider    String
+  status      String
+  amount      Decimal
+  currency    String
+  providerRef String?
+  metadata    Json     @default("{}")
+  createdAt   DateTime @default(now())
+}
+
+model WalletAccount {
+  id        String              @id @default(uuid())
+  userId    String
+  type      String
+  balance   Decimal             @default(0)
+  currency  String              @default("TMT")
+  user      User                @relation(fields: [userId], references: [id])
+  transactions WalletTransaction[]
+
+  @@unique([userId, type, currency])
+}
+
+model WalletTransaction {
+  id        String        @id @default(uuid())
+  accountId String
+  type      String
+  amount    Decimal
+  reason    String
+  metadata  Json          @default("{}")
+  createdAt DateTime      @default(now())
+  account   WalletAccount @relation(fields: [accountId], references: [id])
+}
+
+model Report {
+  id        String   @id @default(uuid())
+  reporterId String
+  listingId String?
+  targetType String
+  targetId   String
+  reason     String
+  status     String   @default("pending")
+  createdAt  DateTime @default(now())
+  reporter   User     @relation(fields: [reporterId], references: [id])
+  listing    Listing? @relation(fields: [listingId], references: [id])
+
+  @@index([targetType, targetId, status])
+}
+
+model ModerationLog {
+  id        String   @id @default(uuid())
+  actorId   String?
+  targetType String
+  targetId   String
+  fromStatus String?
+  toStatus   String
+  reason     String?
+  metadata   Json     @default("{}")
+  createdAt  DateTime @default(now())
+
+  @@index([targetType, targetId, createdAt])
+}
+
+model Banner {
+  id        String   @id @default(uuid())
+  code      String   @unique
+  placement String
+  locale    String?
+  content   Json
+  status    String   @default("draft")
+  startsAt  DateTime?
+  endsAt    DateTime?
+}
+
+model HomepageTile {
+  id        String @id @default(uuid())
+  code      String @unique
+  categoryId String?
+  content   Json
+  order     Int
+  status    String @default("active")
+}
+
+model Translation {
+  id        String   @id @default(uuid())
+  locale    String
+  namespace String
+  key       String
+  value     String
+  updatedAt DateTime @updatedAt
+
+  @@unique([locale, namespace, key])
+}
+
+model SupportTicket {
+  id        String   @id @default(uuid())
+  userId    String
+  status    String   @default("open")
+  subject   String
+  messages  Json     @default("[]")
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model AiTask {
+  id        String   @id @default(uuid())
+  type      String
+  provider  String
+  status    String   @default("queued")
+  input     Json
+  output    Json?
+  error     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model FraudScore {
+  id        String   @id @default(uuid())
+  userId    String?
+  listingId String?
+  score     Decimal
+  signals   Json
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@index([listingId, createdAt])
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  type      String
+  payload   Json     @default("{}")
+  readAt    DateTime?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([userId, readAt, createdAt])
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  actorId   String?
+  action    String
+  target    String
+  metadata  Json     @default("{}")
+  createdAt DateTime @default(now())
+
+  @@index([actorId, createdAt])
+}

@@ -1,0 +1,19 @@
+{
+  "expo": {
+    "name": "Mirasly",
+    "slug": "mirasly",
+    "scheme": "mirasly",
+    "orientation": "portrait",
+    "platforms": ["ios", "android"],
+    "ios": {
+      "bundleIdentifier": "com.mirasly.app"
+    },
+    "android": {
+      "package": "com.mirasly.app",
+      "permissions": ["CAMERA", "ACCESS_FINE_LOCATION", "POST_NOTIFICATIONS"]
+    },
+    "extra": {
+      "apiUrl": "http://localhost:4000"
+    }
+  }
+}

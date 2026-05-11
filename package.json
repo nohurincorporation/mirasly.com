@@ -1,0 +1,21 @@
+{
+  "name": "mirasly",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Mirasly production V1 marketplace super-app monorepo for Turkmenistan and CIS markets.",
+  "type": "module",
+  "packageManager": "pnpm@9.15.0",
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "db:seed": "node packages/db/src/seed-data.js",
+    "i18n:check": "node --test tests/mirasly-core.test.js"
+  },
+  "devDependencies": {
+    "turbo": "^2.3.3",
+    "typescript": "^5.7.2"
+  }
+}
