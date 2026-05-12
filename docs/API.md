@@ -1,60 +1,30 @@
-# API Route Groups
+# Contract-first API Matrix
+
+## Error model
+All endpoints return `{ ok: false, error: { code: string, message?: string, details?: unknown } }` on failure. Validation failures use `code=validation_error`; auth failures use `auth_required`; authorization failures use `insufficient_permissions`.
 
 ## Auth
-
-- `POST /v1/auth/otp/send`
-- `POST /v1/auth/otp/verify`
-- `GET /v1/auth/sessions`
-- `DELETE /v1/auth/sessions/:id`
-
-## Categories
-
-- `GET /v1/categories`
-- `GET /v1/categories/tree`
-- `GET /v1/categories/:slug/filters`
+| Feature | Endpoint | Request DTO | Response DTO | Guard |
+|---|---|---|---|---|
+| Send OTP | `POST /v1/auth/otp/send` | `{ phone: string }` | `{ phone, provider, expiresInSeconds, devCode }` | public |
+| Verify OTP | `POST /v1/auth/otp/verify` | `{ phone: string, code: string(6) }` | `{ ok, user, accessToken, refreshToken }` | public |
+| Refresh token rotation | `POST /v1/auth/refresh` | `{ refreshToken: string }` | `{ ok, rotated, revokedToken, accessToken, refreshToken }` | public |
+| Social/email auth stub | `POST /v1/auth/social` | `{ provider, providerToken, email? }` | `{ ok, mode:"stub", ... }` | public |
+| List sessions | `GET /v1/auth/sessions` | none | `Session[]` | `auth.session.read` |
+| Revoke session | `DELETE /v1/auth/sessions/:id` | path `id` | `{ id, revoked }` | `auth.session.revoke` |
+| Logout all devices | `DELETE /v1/auth/sessions` | none | `{ ok, userId, revokedSessions }` | `auth.session.revoke` |
 
 ## Listings
+Includes create/update/detail/media plus: `POST /:id/pause`, `/:id/renew`, `/:id/mark-sold`, `/:id/mark-rented`, `/:id/promote`, `/:id/report`, `/:id/share` with `listing.write` guard and DTOs for report reason/note.
 
-- `POST /v1/listings`
-- `GET /v1/listings/:id`
-- `PATCH /v1/listings/:id`
-- `POST /v1/listings/:id/media`
-
-## Search
-
-- `GET /v1/search/listings`
-- `GET /v1/search/suggestions`
-- `POST /v1/search/image`
-
-## Engagement
-
-- `POST /v1/me/favorites`
-- `POST /v1/me/saved-searches`
-- `GET /v1/me/notifications`
-
-## Chats
-
-- `GET /v1/chats`
-- `POST /v1/chats`
-- `POST /v1/chats/:id/messages`
-- WebSocket namespace `/chats`
+## Engagement + Notifications
+Under `/v1/me`: favorites add/delete/list, favorite collections list, saved-search create/update/pause/delete/matches, notifications list, mark-read (`POST /notifications/:id/read`), notification preference update (`PATCH /notification-preferences`). Guard: `user.write`.
 
 ## Commerce
+Under `/v1/commerce`: cart item CRUD/list, checkout, order status transition (`POST /orders/:id/status`), buyer/seller order lists, promotion purchase, shops follow/unfollow, places claim flow, place reviews create/moderate. Guards vary by route: `order.read|order.write|promotion.buy|shop.write|place.write|listing.moderate`.
 
-- `POST /v1/commerce/shops`
-- `POST /v1/commerce/places`
-- `POST /v1/commerce/checkout`
-- `GET /v1/commerce/promotions`
-
-## AI
-
-- `POST /v1/ai/suggest-category`
-- `POST /v1/ai/generate-description`
-- `POST /v1/ai/translate`
-- `POST /v1/ai/moderate`
-
-## Admin
-
-- `GET /v1/admin/moderation/listings`
-- `POST /v1/admin/moderation/listings/:id/approve`
-- `POST /v1/admin/moderation/listings/:id/reject`
+## Shops / Places
+Implemented via commerce module endpoints:
+- follow/unfollow shop: `POST|DELETE /v1/commerce/shops/:id/follow`
+- claim place: `POST /v1/commerce/places/:id/claim`
+- reviews + moderation states: `POST /v1/commerce/places/:id/reviews`, `PATCH /v1/commerce/places/:id/reviews/:reviewId/moderate`
