@@ -1,4 +1,5 @@
 import { CanActivate, ExecutionContext, ForbiddenException, Injectable, SetMetadata, UnauthorizedException } from "@nestjs/common";
+import { Reflector } from "@nestjs/core";
 import { can, type Permission } from "./rbac.js";
 
 export const REQUIRED_PERMISSION = "required_permission";
@@ -26,9 +27,14 @@ export class MockAuthGuard implements CanActivate {
 
 @Injectable()
 export class PermissionGuard implements CanActivate {
+  constructor(private readonly reflector: Reflector) {}
+
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest();
-    const required = Reflect.getMetadata(REQUIRED_PERMISSION, context.getHandler()) as Permission | undefined;
+    const required = this.reflector.getAllAndOverride<Permission | undefined>(REQUIRED_PERMISSION, [
+      context.getHandler(),
+      context.getClass(),
+    ]);
 
     if (!required) {
       return true;
